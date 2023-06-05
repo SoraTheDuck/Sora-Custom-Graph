@@ -7,3 +7,11 @@ u can draw by export your algorithm as float[] ySample and apply like example
 might update more
 
 ![image](https://github.com/SoraTheDuck/Sora-Custom-Graph/assets/78374696/e814e104-2c15-456f-af7a-1f87bedc97d5)
+
+Indev:
+- invalid result render
+- Second Order System multiple modes
+- mode picker
+- float[] converter
+- Algorithm generate (damn, kinda hard)
+- apply Second Order System to object (include scale, rotation, position)
