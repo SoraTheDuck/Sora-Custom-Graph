@@ -12,4 +12,8 @@ public class GraphVisualize : MonoBehaviour
 
     [Range(-5f, 5f)]
     public float Responsiveness = 0f;
+    
+    [Range(0, 0.05f)]
+    public float DeltaTime = 0f;
+    
 }

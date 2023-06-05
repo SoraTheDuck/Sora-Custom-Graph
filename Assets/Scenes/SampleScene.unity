@@ -411,6 +411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b33e59c06843b42bc38e42591f8fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frequency: 3.7
-  damping: 0.26
-  Responsiveness: -0.36
+  frequency: 6
+  damping: 0.2
+  Responsiveness: 0
+  DeltaTime: 0.01

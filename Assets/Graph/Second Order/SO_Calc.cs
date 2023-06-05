@@ -68,8 +68,7 @@ namespace Sora_Ults
                                                    (k1 * state.CurrentVelocity)) / k2);
         }
 
-        #region targetVelocity oh sth, I dunno, lol
-
+        #region targetVelocity update
         public float UpdateStrategy(ref SecondOrderState state, float deltaTime, float targetValue,
             float? targetVelocity)
         {

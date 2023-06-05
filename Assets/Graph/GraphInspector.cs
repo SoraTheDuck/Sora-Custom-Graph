@@ -13,46 +13,58 @@ public class GraphInspector : Editor
     private SerializedProperty _frequencyProperty;
     private SerializedProperty _dampingProperty;
     private SerializedProperty _ResponsivenessProperty;
+    private SerializedProperty _DeltaTimeScaleProperty;
+
+    [Range(0,50)][SerializeField] float _graphMaxX = 10;
+    [Range(0,30)][SerializeField] float _graphMaxY = 1;
     
     private void OnEnable()
     {
-        _graph = new Graph(0, 10, 0, 1);
-        _graph.HorizontalAxisUnits = "s";
-        _graph.LabelStyle = "label";
-        
         _serializedObject = new SerializedObject(target);
         _frequencyProperty = _serializedObject.FindProperty("frequency");
         _dampingProperty = _serializedObject.FindProperty("damping");
         _ResponsivenessProperty = _serializedObject.FindProperty("Responsiveness");
+        _DeltaTimeScaleProperty = _serializedObject.FindProperty("DeltaTime");
         
     }
 
     public override void OnInspectorGUI()
     {
         _serializedObject.Update();
-        GraphDetail = EditorGUILayout.IntSlider("Graph Detail", GraphDetail, 0, 10000);
 
+        EditorGUILayout.LabelField("Graphic Settings", EditorStyles.boldLabel);
+        EditorGUILayout.Space(5);
+        
+        GraphDetail = EditorGUILayout.IntSlider("Graph Detail", GraphDetail, 0, 10000);
+        _graphMaxX = EditorGUILayout.Slider("Max X", _graphMaxX, 0, 50);
+        _graphMaxY = EditorGUILayout.Slider("Max Y", _graphMaxY, 0, 30);
+        
+        _graph = new Graph(0, _graphMaxX, 0, _graphMaxY);
+
+        _graph.HorizontalAxisUnits = "s";
+        _graph.LabelStyle = "label";
+        
+        EditorGUILayout.Space(5);
         // Draw the sine graph in the Inspector
         UpdateGraphLine();
         DrawGraph();
+        
+        GUILayout.Space(30);
+        // Display the properties below the graph
+        EditorGUILayout.PropertyField(_frequencyProperty);
+        EditorGUILayout.PropertyField(_dampingProperty);
+        EditorGUILayout.PropertyField(_ResponsivenessProperty);
+        EditorGUILayout.PropertyField(_DeltaTimeScaleProperty);
         
         _serializedObject.ApplyModifiedProperties();
     }
     private void DrawGraph()
     {
-        EditorGUILayout.Space(10);
-        // Use the labelStyle here:
-        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-        GUILayout.Label("Graph", labelStyle);
+        GUILayout.Label("Graph", EditorStyles.boldLabel);
+        EditorGUILayout.Space(5);
         Rect graphRect = GUILayoutUtility.GetRect(0, 100, GUILayout.ExpandWidth(true));
         _graph.Draw(graphRect);
         if (GUI.changed)  Repaint();
-        GUILayout.Space(20);
-        
-        // Display the properties below the graph
-        EditorGUILayout.PropertyField(_frequencyProperty);
-        EditorGUILayout.PropertyField(_dampingProperty);
-        EditorGUILayout.PropertyField(_ResponsivenessProperty);
     }
     
     [Range(0,10000)]
@@ -89,6 +101,7 @@ public class GraphInspector : Editor
 
         return ySamples;
     }
+    
     private float[] CalculateLine_SO_ZeroPole()
     {
         float[] LineArray = new float[GraphDetail];
@@ -98,7 +111,7 @@ public class GraphInspector : Editor
             Z = _dampingProperty.floatValue,
             R = _ResponsivenessProperty.floatValue,
             InitialValue = 0.0f,
-            DeltaTime = 0.01f,
+            DeltaTime = _DeltaTimeScaleProperty.floatValue,
             TargetValue = 1.0f,
         };
 
