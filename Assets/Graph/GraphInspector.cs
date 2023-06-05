@@ -7,8 +7,11 @@ using Sora_Ults;
 [CustomEditor(typeof(GraphVisualize))]
 public class GraphInspector : Editor
 {
+    private AlgorithmSelector_SO algorithmSelector = new AlgorithmSelector_SO();
+    private ISecondOrderSystem _selectedAlgorithm = new SO_Calc_None();
+
     public Graph _graph;
-    private SO_Calc soCalc = new SO_Calc();
+    private SO_Calc_ZeroPole _soCalcZeroPole = new SO_Calc_ZeroPole();
     private SerializedObject _serializedObject;
     private SerializedProperty _frequencyProperty;
     private SerializedProperty _dampingProperty;
@@ -25,9 +28,7 @@ public class GraphInspector : Editor
         _dampingProperty = _serializedObject.FindProperty("damping");
         _ResponsivenessProperty = _serializedObject.FindProperty("Responsiveness");
         _DeltaTimeScaleProperty = _serializedObject.FindProperty("DeltaTime");
-        
     }
-
     public override void OnInspectorGUI()
     {
         _serializedObject.Update();
@@ -38,7 +39,7 @@ public class GraphInspector : Editor
         GraphDetail = EditorGUILayout.IntSlider("Graph Detail", GraphDetail, 0, 10000);
         _graphMaxX = EditorGUILayout.Slider("Max X", _graphMaxX, 0, 50);
         _graphMaxY = EditorGUILayout.Slider("Max Y", _graphMaxY, 0, 30);
-        
+
         _graph = new Graph(0, _graphMaxX, 0, _graphMaxY);
 
         _graph.HorizontalAxisUnits = "s";
@@ -49,7 +50,11 @@ public class GraphInspector : Editor
         UpdateGraphLine();
         DrawGraph();
         
-        GUILayout.Space(30);
+        GUILayout.Space(15);
+        algorithmSelector.selectedAlgorithm = (SelectedAlgorithm)EditorGUILayout.EnumPopup
+            ("Selected Algorithm", algorithmSelector.selectedAlgorithm);
+        GUILayout.Space(10);
+        
         // Display the properties below the graph
         EditorGUILayout.PropertyField(_frequencyProperty);
         EditorGUILayout.PropertyField(_dampingProperty);
@@ -78,7 +83,7 @@ public class GraphInspector : Editor
         //ySamples = CalculateLine_Sin();
         //_graph.UpdateLine("line1", ySamples, Color.yellow);
         
-        ySamples = CalculateLine_SO_ZeroPole();
+        ySamples = CalculateLine_SelectedAlgorithm();
         _graph.UpdateLine("line2", ySamples, Color.yellow);
     }
     
@@ -102,8 +107,29 @@ public class GraphInspector : Editor
         return ySamples;
     }
     
-    private float[] CalculateLine_SO_ZeroPole()
+    ISecondOrderSystem selectedAlgorithm;
+    private float[] CalculateLine_SelectedAlgorithm()
     {
+        switch (algorithmSelector.selectedAlgorithm)
+        { 
+            case SelectedAlgorithm.ZeroPole:
+                selectedAlgorithm = new SO_Calc_ZeroPole();
+                break;
+            case SelectedAlgorithm.StableForcedIterations:
+                selectedAlgorithm = new SO_Calc_StableForcedIterations();
+                break;
+            case SelectedAlgorithm.Euler:
+                selectedAlgorithm = new SO_Calc_Euler();
+                break;
+            case SelectedAlgorithm.None:
+                selectedAlgorithm = new SO_Calc_None();
+                break;
+            default:
+                Debug.Log("pick plz");
+                selectedAlgorithm = new SO_Calc_None();
+                break;
+        }
+
         float[] LineArray = new float[GraphDetail];
         SecondOrderState state = new SecondOrderState
         {
@@ -115,11 +141,11 @@ public class GraphInspector : Editor
             TargetValue = 1.0f,
         };
 
-        soCalc.RecalculateConstants(out state.W, out state.D, out state.K1, out state.K2, out state.K3, state.Z, state.F, state.R);
+        selectedAlgorithm.RecalculateConstants(ref state, state.InitialValue);
 
         for (int i = 0; i < GraphDetail; i++)
         {
-            LineArray[i] = soCalc.UpdateStrategy(ref state, state.DeltaTime, state.TargetValue, null);
+            LineArray[i] = selectedAlgorithm.UpdateStrategy(ref state, state.DeltaTime, state.TargetValue, null);
         }
 
         return LineArray;

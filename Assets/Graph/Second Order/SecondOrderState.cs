@@ -34,7 +34,7 @@ namespace Sora_Ults
 		public float D;
 
 		// the maximum time step for any one solve iteration
-		//public float MaximumTimeStep;
+		public float MaximumTimeStep;
 
 		// meta about the current state of the system as a whole.
 		//internal bool _isDeserializing;
