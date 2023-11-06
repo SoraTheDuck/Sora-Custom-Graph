@@ -10,8 +10,5 @@ might update more
 
 Indev:
 - invalid result render
-- Second Order System multiple modes
-- mode picker
-- float[] converter
 - Algorithm generate (damn, kinda hard)
 - apply Second Order System to object (include scale, rotation, position)
