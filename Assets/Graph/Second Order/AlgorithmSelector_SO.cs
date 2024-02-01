@@ -5,11 +5,8 @@ namespace Sora_Ults
 {
     public enum SelectedAlgorithm {
         ZeroPole,
-        Linear,
-        Euler,
         StableForcedIterations,
-        EulerClampedK2,
-        EulerNoJitter,
+        Euler,
         None
     }
     public class AlgorithmSelector_SO
