@@ -11,7 +11,7 @@ public class GraphInspector : Editor
     private ISecondOrderSystem _selectedAlgorithm = new SO_Calc_None();
 
     public Graph _graph;
-    //private SO_Calc_ZeroPole _soCalcZeroPole = new SO_Calc_ZeroPole();
+    private SO_Calc_ZeroPole _soCalcZeroPole = new SO_Calc_ZeroPole();
     private SerializedObject _serializedObject;
     private SerializedProperty _frequencyProperty;
     private SerializedProperty _dampingProperty;
@@ -51,9 +51,8 @@ public class GraphInspector : Editor
         DrawGraph();
         
         GUILayout.Space(15);
-        // Access and modify the selected algorithm directly from the target object
-        GraphVisualize graphVisualize = (GraphVisualize)target;
-        graphVisualize.selectedAlgorithm = (SelectedAlgorithm)EditorGUILayout.EnumPopup("Selected Algorithm", graphVisualize.selectedAlgorithm);
+        algorithmSelector.selectedAlgorithm = (SelectedAlgorithm)EditorGUILayout.EnumPopup
+            ("Selected Algorithm", algorithmSelector.selectedAlgorithm);
         GUILayout.Space(10);
         
         // Display the properties below the graph
@@ -109,11 +108,9 @@ public class GraphInspector : Editor
     }
     
     ISecondOrderSystem selectedAlgorithm;
-    private GraphVisualize graphVisualize;
-    void SelectAlgorithm()
+    private float[] CalculateLine_SelectedAlgorithm()
     {
-        graphVisualize = (GraphVisualize)target;
-        switch (graphVisualize.selectedAlgorithm)
+        switch (algorithmSelector.selectedAlgorithm)
         { 
             case SelectedAlgorithm.ZeroPole:
                 selectedAlgorithm = new SO_Calc_ZeroPole();
@@ -132,12 +129,7 @@ public class GraphInspector : Editor
                 selectedAlgorithm = new SO_Calc_None();
                 break;
         }
-    }
-    
-    private float[] CalculateLine_SelectedAlgorithm()
-    {
-        SelectAlgorithm();
-        
+
         float[] LineArray = new float[GraphDetail];
         SecondOrderState state = new SecondOrderState
         {
