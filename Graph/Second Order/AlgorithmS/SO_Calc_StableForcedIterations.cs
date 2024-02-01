@@ -16,7 +16,7 @@ namespace Sora_Ults
 
             float deltaTimePart = deltaTime / iterations; // each iteration now has a smaller step
 
-            for (int scan = 0; scan < iterations; ++scan)
+            for (int scan = 0; scan < iterations; scan++)
             {
                 Integrate(ref state, deltaTimePart, targetValue, targetVelocity);
             }

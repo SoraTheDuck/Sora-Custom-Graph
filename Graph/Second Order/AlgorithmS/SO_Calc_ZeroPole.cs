@@ -32,16 +32,13 @@ namespace Sora_Ults
             {
                 // clamp k2 to guarantee stability without jitter
                 k1Stable = state.K1;
-                k2Stable = Mathf.Max(state.K2, (deltaTime * deltaTime / 2) + (deltaTime * state.K1 / 2),
-                    deltaTime * state.K1);
+                k2Stable = Mathf.Max(state.K2, (deltaTime * deltaTime / 2) + (deltaTime * state.K1 / 2), deltaTime * state.K1);
             }
             else
             {
                 // use pole matching when the system is very fast
                 float t1 = Mathf.Exp(-state.Z * state.W * deltaTime);
-                float alpha = 2 * t1 * (state.Z <= 1
-                    ? Mathf.Cos(deltaTime * state.D)
-                    : (float)System.Math.Cosh(deltaTime * state.D));
+                float alpha = 2 * t1 * (state.Z <= 1 ? Mathf.Cos(deltaTime * state.D) : (float)System.Math.Cosh(deltaTime * state.D));
                 float beta = t1 * t1;
                 float t2 = deltaTime / (1 + beta - alpha);
                 k1Stable = (1 - beta) * t2;

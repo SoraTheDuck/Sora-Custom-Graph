@@ -16,11 +16,17 @@ namespace Sora_Ults
             // Default implementation (None)
         }
         
+
+        /// <summary>
+        /// This function is declare  the initial value for K1,k2,k3 base on frequency, zeta , responsive
+        /// </summary> NDDevgame command this shit
+        /// <param name="state"></param>
+        /// <param name="initialValue"></param>
         internal static void DefaultConstantCalculation(ref SecondOrderState state, float initialValue)
         {
             state.K1 = state.Z / (Mathf.PI * state.F);
 
-            float tauFrequency = (2 * Mathf.PI * state.F);
+            float tauFrequency = (2 * Mathf.PI * state.F); // this is 2.pi.f. In physic we call this Omega .WTF taufrequency??????
 
             state.K2 = 1 / (tauFrequency * tauFrequency);
             state.K3 = state.R / tauFrequency;
@@ -44,10 +50,11 @@ namespace Sora_Ults
             float k2 = k2Override ?? state.K2;
 
             // integrate position by velocity
-            state.CurrentValue += (deltaTime * state.CurrentVelocity);
+            state.CurrentValue += (deltaTime * state.CurrentVelocity); // y[n+1] = y[n] + T*(dy/dt)
 
             // integrate velocity by acceleration
-            state.CurrentVelocity += (deltaTime * (targetValue + (state.K3 * targetVelocity) - state.CurrentValue - (k1 * state.CurrentVelocity)) / k2);
+            // (dy/dt)[n+1] = (dy/dt)[n] + T * ( x[n+1] + k3 * (dx/dt)[n+1] - y[n+1] - k1 *  (dy/dt)[n]/k2
+            state.CurrentVelocity += (deltaTime * (targetValue + (state.K3 * targetVelocity) - state.CurrentValue - ((k1 * state.CurrentVelocity)) / k2)); 
         }
 
         private static float UpdateVelocity(ref SecondOrderState state,
@@ -56,8 +63,8 @@ namespace Sora_Ults
             float? targetVelocityOrNull
         )
         {
-            float estimatedVelocity = (targetValue - state.PreviousTargetValue) / deltaTime;
-            float xd = targetVelocityOrNull.GetValueOrDefault(estimatedVelocity);
+            float estimatedVelocity = (targetValue - state.PreviousTargetValue) / deltaTime; // dx/dt[n+1] = (x[n+1] -x[n])/T
+            float xd = targetVelocityOrNull.GetValueOrDefault(estimatedVelocity); // if target velocity is null so xd will be estimateVelocity. Else it will be targetVelocityorNull
             state.PreviousTargetValue = targetValue;
             return xd;
         }

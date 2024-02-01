@@ -17,7 +17,7 @@ namespace Sora_Ults
 
 		// system input
 		public float DeltaTime;
-		//public float ElapsedTime;
+		//public float ElapsedTime; //if elapsed time > 0 -> unstable (laggy stuffs, lol)
 
 		// system output
 		public float CurrentValue; // at t0: initial value
