@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sora_Ults;
 
 public class GraphVisualize : MonoBehaviour
 {
+    public SelectedAlgorithm selectedAlgorithm;
+    
     [Range(0f, 20f)]
     public float frequency = 1f;
     
