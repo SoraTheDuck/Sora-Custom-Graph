@@ -85,8 +85,12 @@ namespace Sora_Ults
         }
 
         
+<<<<<<< Updated upstream
         //The responsiveness just broken D: I dunno why, help plz
         public Vector3 UpdatePosition_2(Vector3 targetPosition, Transform transformToUpdate)
+=======
+        public Vector3 UpdatePosition(Vector3 targetPosition)
+>>>>>>> Stashed changes
         {
             float deltaTime = Time.deltaTime * stateX.DeltaTime;
 
@@ -95,12 +99,15 @@ namespace Sora_Ults
 
             Vector3 updatedValue = new Vector3(
                 selectedAlgorithm.UpdateStrategy(ref stateX, deltaTime, targetValue.x, null),
+<<<<<<< Updated upstream
                 selectedAlgorithm.UpdateStrategy(ref stateY, deltaTime, targetValue.y, null),
+=======
+                selectedAlgorithm.UpdateStrategy (ref stateY, deltaTime, targetValue.y, null),
+>>>>>>> Stashed changes
                 selectedAlgorithm.UpdateStrategy(ref stateZ, deltaTime, targetValue.z, null));
 
             //transformToUpdate.position =  updatedValue;
             return updatedValue;
         }
-
     }
 }

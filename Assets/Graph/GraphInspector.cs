@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+using UnityEditor;
 using Sora_Ults;
 
 [CustomEditor(typeof(GraphVisualize))]
@@ -13,21 +13,51 @@ public class GraphInspector : Editor
     public Graph _graph;
     //private SO_Calc_ZeroPole _soCalcZeroPole = new SO_Calc_ZeroPole();
     private SerializedObject _serializedObject;
-    private SerializedProperty _frequencyProperty;
-    private SerializedProperty _dampingProperty;
-    private SerializedProperty _ResponsivenessProperty;
-    private SerializedProperty _DeltaTimeScaleProperty;
-
-    [Range(0,50)][SerializeField] float _graphMaxX = 10;
-    [Range(0,30)][SerializeField] float _graphMaxY = 1;
+    private SerializedProperty _PosfrequencyProperty;
+    private SerializedProperty _PosdampingProperty;
+    private SerializedProperty _PosResponsivenessProperty;
+    private SerializedProperty _PosDeltaTimeScaleProperty;
     
+    private SerializedProperty _RotfrequencyProperty;
+    private SerializedProperty _RotdampingProperty;
+    private SerializedProperty _RotResponsivenessProperty;
+    private SerializedProperty _RotDeltaTimeScaleProperty;
+    
+    private SerializedProperty _ScalefrequencyProperty;
+    private SerializedProperty _ScaledampingProperty;
+    private SerializedProperty _ScaleResponsivenessProperty;
+    private SerializedProperty _ScaleDeltaTimeScaleProperty;
+    
+    bool showPosition = true;
+    bool showRotation = true;
+    bool showScale = true;
+    
+    [Range(0, 5000)]
+    [SerializeField] int GraphDetail = 1000;
+    [Range(0, 50)] [SerializeField] float _graphMaxX = 10;
+    [Range(0, 30)] [SerializeField] float _graphMaxY = 1;
+
+    [SerializeField] private Color PosColor = Color.yellow;
+    [SerializeField] private Color RotColor = new Color(47/255, 0.6f, 1);
+    [SerializeField] private Color ScaleColor = new Color(1, 0.1f, 0.3f);
+
     private void OnEnable()
     {
         _serializedObject = new SerializedObject(target);
-        _frequencyProperty = _serializedObject.FindProperty("frequency");
-        _dampingProperty = _serializedObject.FindProperty("damping");
-        _ResponsivenessProperty = _serializedObject.FindProperty("Responsiveness");
-        _DeltaTimeScaleProperty = _serializedObject.FindProperty("DeltaTime");
+        _PosfrequencyProperty = _serializedObject.FindProperty("PosFrequency");
+        _PosdampingProperty = _serializedObject.FindProperty("PosDamping");
+        _PosResponsivenessProperty = _serializedObject.FindProperty("PosResponsiveness");
+        _PosDeltaTimeScaleProperty = _serializedObject.FindProperty("PosDeltaTime");
+        
+        _RotfrequencyProperty = _serializedObject.FindProperty("RotFrequency");
+        _RotdampingProperty = _serializedObject.FindProperty("RotDamping");
+        _RotResponsivenessProperty = _serializedObject.FindProperty("RotResponsiveness");
+        _RotDeltaTimeScaleProperty = _serializedObject.FindProperty("RotDeltaTime");
+        
+        _ScalefrequencyProperty = _serializedObject.FindProperty("ScaleFrequency");
+        _ScaledampingProperty = _serializedObject.FindProperty("ScaleDamping");
+        _ScaleResponsivenessProperty = _serializedObject.FindProperty("ScaleResponsiveness");
+        _ScaleDeltaTimeScaleProperty = _serializedObject.FindProperty("ScaleDeltaTime");
     }
     public override void OnInspectorGUI()
     {
@@ -35,32 +65,71 @@ public class GraphInspector : Editor
 
         EditorGUILayout.LabelField("Graphic Settings", EditorStyles.boldLabel);
         EditorGUILayout.Space(5);
-        
-        GraphDetail = EditorGUILayout.IntSlider("Graph Detail", GraphDetail, 0, 10000);
+
+        GraphDetail = EditorGUILayout.IntSlider("Graph Detail", GraphDetail, 0, 5000);
         _graphMaxX = EditorGUILayout.Slider("Max X", _graphMaxX, 0, 50);
         _graphMaxY = EditorGUILayout.Slider("Max Y", _graphMaxY, 0, 30);
+
+        PosColor = EditorGUILayout.ColorField("PosLine Color", PosColor);
+        RotColor = EditorGUILayout.ColorField("RotLine Color", RotColor);
+        ScaleColor = EditorGUILayout.ColorField("ScaleLine Color", ScaleColor);
 
         _graph = new Graph(0, _graphMaxX, 0, _graphMaxY);
 
         _graph.HorizontalAxisUnits = "s";
         _graph.LabelStyle = "label";
-        
+
         EditorGUILayout.Space(5);
         // Draw the sine graph in the Inspector
         UpdateGraphLine();
         DrawGraph();
-        
+
         GUILayout.Space(15);
         // Access and modify the selected algorithm directly from the target object
         GraphVisualize graphVisualize = (GraphVisualize)target;
         graphVisualize.selectedAlgorithm = (SelectedAlgorithm)EditorGUILayout.EnumPopup("Selected Algorithm", graphVisualize.selectedAlgorithm);
         GUILayout.Space(10);
+
+        showPosition = EditorGUILayout.BeginFoldoutHeaderGroup(showPosition, "Position");
+        if (showPosition)
+        {
+            // Display the properties below the graph
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.PropertyField(_PosfrequencyProperty);
+            EditorGUILayout.PropertyField(_PosdampingProperty);
+            EditorGUILayout.PropertyField(_PosResponsivenessProperty);
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.PropertyField(_PosDeltaTimeScaleProperty);
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
         
-        // Display the properties below the graph
-        EditorGUILayout.PropertyField(_frequencyProperty);
-        EditorGUILayout.PropertyField(_dampingProperty);
-        EditorGUILayout.PropertyField(_ResponsivenessProperty);
-        EditorGUILayout.PropertyField(_DeltaTimeScaleProperty);
+        showRotation = EditorGUILayout.BeginFoldoutHeaderGroup(showRotation, "Rotation");
+        if (showRotation)
+        {
+            // Display the properties below the graph
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.PropertyField(_RotfrequencyProperty);
+            EditorGUILayout.PropertyField(_RotdampingProperty);
+            EditorGUILayout.PropertyField(_RotResponsivenessProperty);
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.PropertyField(_RotDeltaTimeScaleProperty);
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        
+        showScale = EditorGUILayout.BeginFoldoutHeaderGroup(showScale, "Scale");
+        if (showScale)
+        {
+            // Display the properties below the graph
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.PropertyField(_ScalefrequencyProperty);
+            EditorGUILayout.PropertyField(_ScaledampingProperty);
+            EditorGUILayout.PropertyField(_ScaleResponsivenessProperty);
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.PropertyField(_ScaleDeltaTimeScaleProperty);
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        
+        
         
         _serializedObject.ApplyModifiedProperties();
     }
@@ -70,11 +139,9 @@ public class GraphInspector : Editor
         EditorGUILayout.Space(5);
         Rect graphRect = GUILayoutUtility.GetRect(0, 100, GUILayout.ExpandWidth(true));
         _graph.Draw(graphRect);
-        if (GUI.changed)  Repaint();
+        if (GUI.changed) Repaint();
     }
-    
-    [Range(0,10000)]
-    [SerializeField] int GraphDetail = 1000;
+
     private float[] ySamples;
     private int currentIndex = 0;
 
@@ -83,11 +150,20 @@ public class GraphInspector : Editor
         //Example 
         //ySamples = CalculateLine_Sin();
         //_graph.UpdateLine("line1", ySamples, Color.yellow);
+
+        ySamples = CalculateLine_SelectedAlgorithm(_PosfrequencyProperty, _PosdampingProperty,
+                                                                _PosResponsivenessProperty, _PosDeltaTimeScaleProperty);
+        _graph.UpdateLine("PosLine", ySamples, PosColor);
         
-        ySamples = CalculateLine_SelectedAlgorithm();
-        _graph.UpdateLine("line2", ySamples, Color.yellow);
+        ySamples = CalculateLine_SelectedAlgorithm(_RotfrequencyProperty, _RotdampingProperty,
+                                                                 _RotResponsivenessProperty, _RotDeltaTimeScaleProperty);
+        _graph.UpdateLine("RotLine", ySamples, RotColor);
+        
+        ySamples = CalculateLine_SelectedAlgorithm(_ScalefrequencyProperty, _ScaledampingProperty,
+                                                                 _ScaleResponsivenessProperty, _ScaleDeltaTimeScaleProperty);
+        _graph.UpdateLine("ScaleLine", ySamples, ScaleColor);
     }
-    
+
     //example, to print anything owo
     private float[] CalculateLine_Sin()
     {
@@ -95,8 +171,8 @@ public class GraphInspector : Editor
         {
             ySamples = new float[GraphDetail];
         }
-    
-        float frequency = _frequencyProperty.floatValue;
+
+        float frequency = _PosfrequencyProperty.floatValue;
         // Calculate new y samples for the graph
         for (int i = 0; i < GraphDetail; i++)
         {
@@ -107,14 +183,14 @@ public class GraphInspector : Editor
 
         return ySamples;
     }
-    
+
     ISecondOrderSystem selectedAlgorithm;
     private GraphVisualize graphVisualize;
     void SelectAlgorithm()
     {
         graphVisualize = (GraphVisualize)target;
         switch (graphVisualize.selectedAlgorithm)
-        { 
+        {
             case SelectedAlgorithm.ZeroPole:
                 selectedAlgorithm = new SO_Calc_ZeroPole();
                 break;
@@ -133,11 +209,14 @@ public class GraphInspector : Editor
                 break;
         }
     }
-    
-    private float[] CalculateLine_SelectedAlgorithm()
+
+    private float[] CalculateLine_SelectedAlgorithm(SerializedProperty _frequencyProperty, 
+                                                    SerializedProperty _dampingProperty, 
+                                                    SerializedProperty _ResponsivenessProperty,
+                                                    SerializedProperty _DeltaTimeScaleProperty)
     {
         SelectAlgorithm();
-        
+
         float[] LineArray = new float[GraphDetail];
         SecondOrderState state = new SecondOrderState
         {
@@ -159,4 +238,3 @@ public class GraphInspector : Editor
         return LineArray;
     }
 }
-

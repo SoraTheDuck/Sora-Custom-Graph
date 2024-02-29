@@ -39,6 +39,7 @@ namespace Sora_Ults
 		// meta about the current state of the system as a whole.
 		//internal bool _isDeserializing;
 	}
+
 	
 	
 }
