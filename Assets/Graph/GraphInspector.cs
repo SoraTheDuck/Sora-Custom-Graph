@@ -13,16 +13,19 @@ public class GraphInspector : Editor
     public Graph _graph;
     //private SO_Calc_ZeroPole _soCalcZeroPole = new SO_Calc_ZeroPole();
     private SerializedObject _serializedObject;
+    private SerializedProperty _PosToggleProperty;
     private SerializedProperty _PosfrequencyProperty;
     private SerializedProperty _PosdampingProperty;
     private SerializedProperty _PosResponsivenessProperty;
     private SerializedProperty _PosDeltaTimeScaleProperty;
     
+    private SerializedProperty _RotToggleProperty;
     private SerializedProperty _RotfrequencyProperty;
     private SerializedProperty _RotdampingProperty;
     private SerializedProperty _RotResponsivenessProperty;
     private SerializedProperty _RotDeltaTimeScaleProperty;
     
+    private SerializedProperty _ScaleToggleProperty;
     private SerializedProperty _ScalefrequencyProperty;
     private SerializedProperty _ScaledampingProperty;
     private SerializedProperty _ScaleResponsivenessProperty;
@@ -44,16 +47,19 @@ public class GraphInspector : Editor
     private void OnEnable()
     {
         _serializedObject = new SerializedObject(target);
+        _PosToggleProperty = _serializedObject.FindProperty("PositionToggle");
         _PosfrequencyProperty = _serializedObject.FindProperty("PosFrequency");
         _PosdampingProperty = _serializedObject.FindProperty("PosDamping");
         _PosResponsivenessProperty = _serializedObject.FindProperty("PosResponsiveness");
         _PosDeltaTimeScaleProperty = _serializedObject.FindProperty("PosDeltaTime");
         
+        _RotToggleProperty = _serializedObject.FindProperty("RotationToggle");
         _RotfrequencyProperty = _serializedObject.FindProperty("RotFrequency");
         _RotdampingProperty = _serializedObject.FindProperty("RotDamping");
         _RotResponsivenessProperty = _serializedObject.FindProperty("RotResponsiveness");
         _RotDeltaTimeScaleProperty = _serializedObject.FindProperty("RotDeltaTime");
         
+        _ScaleToggleProperty = _serializedObject.FindProperty("ScaleToggle");
         _ScalefrequencyProperty = _serializedObject.FindProperty("ScaleFrequency");
         _ScaledampingProperty = _serializedObject.FindProperty("ScaleDamping");
         _ScaleResponsivenessProperty = _serializedObject.FindProperty("ScaleResponsiveness");
@@ -151,17 +157,27 @@ public class GraphInspector : Editor
         //ySamples = CalculateLine_Sin();
         //_graph.UpdateLine("line1", ySamples, Color.yellow);
 
-        ySamples = CalculateLine_SelectedAlgorithm(_PosfrequencyProperty, _PosdampingProperty,
-                                                                _PosResponsivenessProperty, _PosDeltaTimeScaleProperty);
-        _graph.UpdateLine("PosLine", ySamples, PosColor);
-        
-        ySamples = CalculateLine_SelectedAlgorithm(_RotfrequencyProperty, _RotdampingProperty,
-                                                                 _RotResponsivenessProperty, _RotDeltaTimeScaleProperty);
-        _graph.UpdateLine("RotLine", ySamples, RotColor);
-        
-        ySamples = CalculateLine_SelectedAlgorithm(_ScalefrequencyProperty, _ScaledampingProperty,
-                                                                 _ScaleResponsivenessProperty, _ScaleDeltaTimeScaleProperty);
-        _graph.UpdateLine("ScaleLine", ySamples, ScaleColor);
+        if (_PosToggleProperty.boolValue)
+        {
+            ySamples = CalculateLine_SelectedAlgorithm(_PosfrequencyProperty, _PosdampingProperty,
+                                                                    _PosResponsivenessProperty, _PosDeltaTimeScaleProperty);
+            _graph.UpdateLine("PosLine", ySamples, PosColor);
+        }
+
+
+        if (_RotToggleProperty.boolValue)
+        {
+            ySamples = CalculateLine_SelectedAlgorithm(_RotfrequencyProperty, _RotdampingProperty,
+                _RotResponsivenessProperty, _RotDeltaTimeScaleProperty);
+            _graph.UpdateLine("RotLine", ySamples, RotColor);
+        }
+
+        if (_ScaleToggleProperty.boolValue)
+        {
+            ySamples = CalculateLine_SelectedAlgorithm(_ScalefrequencyProperty, _ScaledampingProperty,
+                                                                     _ScaleResponsivenessProperty, _ScaleDeltaTimeScaleProperty);
+            _graph.UpdateLine("ScaleLine", ySamples, ScaleColor);
+        }
     }
 
     //example, to print anything owo

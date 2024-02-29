@@ -75,9 +75,9 @@ public class SO_Transform : MonoBehaviour
         positionHandler.Initialize(PosFrequency, PosDamping, PosResponsiveness, PosDeltaTimeScale, initialPosition, ASelector, target.transform.position);
         rotationHandler.Initialize(RotFrequency, RotDamping, RotResponsiveness, RotDeltaTimeScale, initialRotation, ASelector, target.transform.rotation);
         scaleHandler.Initialize(ScaleFrequency, ScaleDamping, ScaleResponsiveness, ScaleDeltaTimeScale, initialScale, ASelector,target.transform.localScale);
-        GV.UpdateOnGUI_Pos(PosFrequency, PosDamping, PosResponsiveness, PosDeltaTimeScale * 0.015f, ASelector);
-        GV.UpdateOnGUI_Rot(RotFrequency, RotDamping, RotResponsiveness, RotDeltaTimeScale  * 0.015f, ASelector);
-        GV.UpdateOnGUI_Scale(ScaleFrequency, ScaleDamping, ScaleResponsiveness, ScaleDeltaTimeScale * 0.015f, ASelector);
+        GV.UpdateOnGUI_Pos(PosFrequency, PosDamping, PosResponsiveness, PosDeltaTimeScale * 0.015f, ASelector, PositionToggle);
+        GV.UpdateOnGUI_Rot(RotFrequency, RotDamping, RotResponsiveness, RotDeltaTimeScale  * 0.015f, ASelector, RotationToggle);
+        GV.UpdateOnGUI_Scale(ScaleFrequency, ScaleDamping, ScaleResponsiveness, ScaleDeltaTimeScale * 0.015f, ASelector, ScaleToggle);
 
     }
 
