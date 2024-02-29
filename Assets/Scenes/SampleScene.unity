@@ -410,10 +410,7 @@ GameObject:
   - component: {fileID: 1120808982}
   - component: {fileID: 1120808981}
   - component: {fileID: 1120808980}
-<<<<<<< Updated upstream
-=======
   - component: {fileID: 1120808985}
->>>>>>> Stashed changes
   - component: {fileID: 1120808984}
   m_Layer: 0
   m_Name: NDisHere
@@ -431,7 +428,7 @@ BoxCollider:
   m_GameObject: {fileID: 1120808979}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -493,12 +490,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1120808979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.09, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1120808984
 MonoBehaviour:
@@ -512,12 +509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b33e59c06843b42bc38e42591f8fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< Updated upstream
-  frequency: 6
-  damping: 0.2
-  Responsiveness: 0
-  DeltaTime: 0.01
-=======
   selectedAlgorithm: 0
   PosFrequency: 0.37
   PosDamping: 0.111
@@ -658,4 +649,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> Stashed changes
